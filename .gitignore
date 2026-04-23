@@ -1,0 +1,15 @@
+# PlatformIO (Hardware)
+.pio/
+.vscode/
+*.gcc-flags.json
+
+# Node.js (Backend & Frontend)
+node_modules/
+.env
+npm-debug.log*
+
+# OS & Diverse
+.DS_Store
+Thumbs.db
+*.db
+*.sqlite
