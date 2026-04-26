@@ -1,0 +1,1 @@
+//Implemententarea functiilor din SensorManager.hpp

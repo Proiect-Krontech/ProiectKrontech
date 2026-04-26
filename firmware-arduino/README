@@ -1,0 +1,165 @@
+# Smart Pillow — Firmware
+
+Firmware pentru **Arduino Uno R4 WiFi** (Renesas RA4M1).  
+Citește 4 celule de sarcină HX711 + accelerometru MPU6050, analizează postura
+și trimite date la ESP32 prin UART Serial.
+
+---
+
+## Structura proiectului
+
+```
+firmware/
+├── src/
+│   ├── Config.hpp                  ← toate constantele (pini, praguri, timpi)
+│   ├── main.cpp                    ← setup() + loop()
+│   │
+│   ├── sensors/
+│   │   ├── ILoadCell.hpp           ← interfață pură
+│   │   ├── HX711Driver.hpp/.cpp    ← driver real
+│   │   ├── MockLoadCell.hpp        ← mock pentru development fără hardware
+│   │   ├── AccelerometerDriver.hpp/.cpp  ← MPU6050 pe spătar
+│   │   └── SensorManager.hpp/.cpp  ← orchestrare + medie glisantă
+│   │
+│   ├── posture/
+│   │   ├── PostureData.hpp         ← structuri de date (PostureResult, enums)
+│   │   └── PostureAnalyzer.hpp/.cpp ← algoritm detecție postură
+│   │
+│   ├── alerts/
+│   │   ├── BuzzerPatterns.hpp      ← secvențe de bip-uri
+│   │   └── AlertManager.hpp/.cpp   ← gestionare alerte non-blocking
+│   │
+│   ├── comm/
+│   │   └── SerialBridge.hpp/.cpp   ← trimitere JSON la ESP32 prin UART
+│   │
+│   └── utils/
+│       └── Logger.hpp              ← logging centralizat cu nivele
+│
+├── test/
+│   ├── Arduino.h                   ← mock Arduino pentru compilare nativă
+│   └── test_native/
+│       ├── test_alert_manager.cpp
+│       ├── test_posture_analyzer.cpp
+│       ├── test_sensor_manager.cpp
+│       └── test_posture_data.cpp
+│
+└── platformio.ini
+```
+
+---
+
+## Setup rapid
+
+### 1. Instalare PlatformIO
+
+```bash
+pip install platformio
+# sau extensia PlatformIO IDE în VS Code
+```
+
+### 2. Rulare unit tests (fără hardware)
+
+```bash
+cd firmware
+pio test -e native
+```
+
+### 3. Build firmware
+
+```bash
+pio run -e uno_r4_wifi
+```
+
+### 4. Upload pe Arduino
+
+```bash
+pio run -e uno_r4_wifi --target upload
+```
+
+### 5. Monitor serial
+
+```bash
+pio device monitor --baud 115200
+```
+
+---
+
+## Mod mock vs hardware real
+
+În `src/main.cpp`, linia:
+
+```cpp
+#define USE_MOCK_SENSORS true
+```
+
+- `true`  → MockLoadCell — date simulate, fără hardware fizic
+- `false` → HX711Driver — senzori reali
+
+---
+
+## Conexiuni hardware
+
+### HX711 (celule de sarcină)
+
+| HX711 | DOUT | SCK | Celule |
+|-------|------|-----|--------|
+| #0    | 2    | 3   | 0, 1   |
+| #1    | 4    | 5   | 2, 3   |
+| #2    | 6    | 7   | 4, 5   |
+| #3    | 8    | 9   | 6, 7   |
+
+### MPU6050 (accelerometru spătar)
+
+| Semnal | Pin Arduino R4 |
+|--------|---------------|
+| SDA    | A4            |
+| SCL    | A5            |
+| VCC    | 3.3V          |
+| GND    | GND           |
+
+### Buzzer
+
+| Semnal | Pin |
+|--------|-----|
+| +      | 10  |
+| -      | GND |
+
+### Comunicare ESP32
+
+| Arduino R4 | ESP32  |
+|------------|--------|
+| TX1 (pin1) | GPIO16 |
+| RX1 (pin0) | GPIO17 |
+| GND        | GND    |
+
+> **Atenție:** Ambele lucrează la 3.3V — compatibile direct, fără level shifter.
+
+---
+
+## Conventional Commits
+
+```
+feat(sensors): add HX711 multi-channel driver
+fix(posture): correct front ratio threshold
+test(alerts): add priority override tests
+docs(firmware): update pin mapping table
+refactor(comm): extract JSON serialization
+```
+
+---
+
+## Coding style
+
+**Google C++ Style Guide** — formatare automată:
+
+```bash
+clang-format -i src/**/*.cpp src/**/*.hpp
+```
+
+Fișier `.clang-format` în rădăcina repo-ului:
+
+```yaml
+BasedOnStyle: Google
+IndentWidth: 4
+ColumnLimit: 100
+```
