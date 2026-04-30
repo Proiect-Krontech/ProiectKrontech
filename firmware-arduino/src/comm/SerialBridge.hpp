@@ -5,14 +5,13 @@
 //
 // Format mesaj:
 // {
-//   "ts": 12345,
-//   "state": 1,
-//   "score": 82,
-//   "issues": 0,
-//   "front": 0.54,
-//   "side": 0.08,
-//   "pitch": 3.2,
-//   "roll": 1.1,
-//   "bad_ms": 0,
-//   "seats": [11.2, 10.8, 12.5, 11.9, 8.3, 7.9, 7.7, 5.2]
+//   "device_id": "PERNA001",
+//   "timestamp": 171S17B905,
+//   "posture": "good",
+//   "confidence": 0.85,
+//   "F": 0.54,
+//   "S": 0.08,
+//   "L": 3.2,
+//   "R": 1.1,
+//   "state_duration": 5,
 // } dar poate fi configurabil
