@@ -1,0 +1,141 @@
+<section id="cos" class="cos sectiune">
+  <div class="container-pagina">
+
+    <h2 class="titlu-sectiune">Coșul Tău</h2>
+    <p class="subtitlu-sectiune">n 
+      Verifică articolele selectate și plasează comanda.
+    </p>
+
+   
+    @if (comandaPlasata()) {
+      <div class="cos__confirmare">
+        <span class="cos__confirmare-icon">&#10003;</span>
+        <h3 class="cos__confirmare-titlu">Comanda a fost plasată cu succes!</h3>
+        <p class="cos__confirmare-text">
+          Vei primi un email cu detaliile comenzii și codul de activare
+          pentru fiecare pernă comandată.
+        </p>
+      </div>
+    }
+
+ 
+    @if (store.esteGol() && !comandaPlasata()) {
+      <!-- Coșul gol — mesaj informativ -->
+      <div class="cos__gol">
+        <span class="cos__gol-icon">&#128722;</span>
+        <p class="cos__gol-text">Coșul tău este gol.</p>
+        <a href="#marimi" class="cos__gol-link">
+          Alege o pernă de mai sus
+        </a>
+      </div>
+    }
+
+
+    @if (!store.esteGol() && !comandaPlasata()) {
+      <div class="cos__continut">
+
+       
+        <div class="cos__lista">
+
+        
+          @for (articol of store.articole(); track articol.varianta.id) {
+            <div class="cos__articol">
+
+              
+              <div class="cos__articol-info">
+                <span class="cos__articol-marime">
+                  {{ articol.varianta.marime }}
+                </span>
+                <div class="cos__articol-detalii">
+                  <span class="cos__articol-eticheta">
+                    Smart Pillow — {{ articol.varianta.eticheta }}
+                  </span>
+                  <span class="cos__articol-dimensiuni">
+                    {{ articol.varianta.dimensiuni }}
+                  </span>
+                </div>
+              </div>
+
+              
+              <div class="cos__articol-cantitate">
+                <button
+                  class="cos__buton-cantitate"
+                  (click)="scadeCantitate(articol.varianta.id, articol.cantitate)"
+                  [attr.aria-label]="'Scade cantitate ' + articol.varianta.eticheta">
+                  &minus;
+                </button>
+                <span class="cos__cantitate-valoare">
+                  {{ articol.cantitate }}
+                </span>
+                <button
+                  class="cos__buton-cantitate"
+                  (click)="cresceCantitate(articol.varianta.id, articol.cantitate)"
+                  [attr.aria-label]="'Crește cantitate ' + articol.varianta.eticheta">
+                  &plus;
+                </button>
+              </div>
+
+              
+              <div class="cos__articol-pret">
+                {{ articol.varianta.pret * articol.cantitate }} RON
+              </div>
+
+              
+              <button
+                class="cos__buton-sterge"
+                (click)="stergeArticol(articol.varianta.id)"
+                [attr.aria-label]="'Șterge ' + articol.varianta.eticheta + ' din coș'">
+                &#10005;
+              </button>
+
+            </div>
+          }
+
+        </div>
+
+        
+        <div class="cos__rezumat">
+
+          
+          <div class="cos__rezumat-linie">
+            <span>Articole în coș:</span>
+          
+            <span>{{ store.numarArticole() }} buc.</span>
+          </div>
+
+          
+          <div class="cos__rezumat-linie">
+            <span>Livrare:</span>
+            <span class="cos__livrare-gratuita">Gratuită</span>
+          </div>
+
+          
+          <hr class="cos__separator" />
+
+          
+          <div class="cos__rezumat-linie cos__rezumat-total">
+            <span>Total:</span>
+           
+            <span>{{ store.pretTotal() }} RON</span>
+          </div>
+
+          
+          <button
+            class="cos__buton-comanda"
+            (click)="plaseazaComanda()">
+            Plasează Comanda
+          </button>
+
+          <button
+            class="cos__buton-goleste"
+            (click)="golesteCosu()">
+            Golește Coșul
+          </button>
+
+        </div>
+
+      </div>
+    }
+
+  </div>
+</section>
