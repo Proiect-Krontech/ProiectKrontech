@@ -6,25 +6,19 @@
 
 
 // ──────────────────────────────────────────────────────────────────────────────
-//  PostureAnalyzer — primeste RawReadings + factor si produce un PostureResult
-//
-//  Toata logica de detectie postura e izolata aici.
-//  Nu stie nimic despre hardware sau Serial.
+//PostureAnalyzer — receives RawReadings + factor and produces a PostureResult
 // ──────────────────────────────────────────────────────────────────────────────
 
 class PostureAnalyzer {
 public:
     PostureAnalyzer() = default;
 
-    // Seteaza referinta de distributie (se apeleaza dupa calibrare)
     void set_reference(const WeightDistribution& ref);
 
-    // Analizeaza o citire si returneaza rezultatul complet
+    // Analyzes a reading and returns the full result
     PostureResult analyze(const RawReadings& raw,
                           float              factor) const;
 
-    // Auto-zero: daca scaunul e gol destul de mult, reseteaza offsetul
-    // Returneaza true daca a fost resetat zero-ul
     bool update_empty_counter(bool is_empty,
                                int& empty_counter,
                                int  threshold) const;
