@@ -36,14 +36,14 @@ struct PostureResult {
     PresenceStatus    presence      = PresenceStatus::EMPTY;
     float             total_kg      = 0.0f;
 
-    WeightDistribution current;   // distributia curenta (%)
-    WeightDistribution reference; // distributia de referinta "DREPT" (%)
+    WeightDistribution current;   
+    WeightDistribution reference; 
 
     PostureAxisStatus front_back_status  = PostureAxisStatus::STRAIGHT;
     PostureAxisStatus left_right_status  = PostureAxisStatus::STRAIGHT;
 
-    float diff_front_back  = 0.0f;  // deviatie % pe axa fata/spate
-    float diff_left_right  = 0.0f;  // deviatie % pe axa stanga/dreapta
+    float diff_front_back  = 0.0f;  
+    float diff_left_right  = 0.0f;  
 
     bool is_good_posture() const {
         return presence == PresenceStatus::OCCUPIED &&
