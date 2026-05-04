@@ -1,0 +1,33 @@
+<section id="functionalitati" class="features sectiune">
+  <div class="container-pagina">
+
+
+    <h2 class="titlu-sectiune">De Ce Smart Pillow?</h2>
+    <p class="subtitlu-sectiune">
+      Perna noastră inteligentă combină confortul premium cu tehnologia
+      de monitorizare a posturii, pentru un somn care te vindecă.
+    </p>
+
+    <div class="features__grid">
+
+      @for (functionalitate of functionalitati(); track $index) {
+      <article class="features__card">
+
+        <span class="features__card-icon">
+          {{ functionalitate.icon }}
+        </span>
+
+
+        <h3 class="features__card-titlu">
+          {{ functionalitate.titlu }}
+        </h3>
+
+        <p class="features__card-descriere">
+          {{ functionalitate.descriere }}
+        </p>
+      </article>
+      }
+
+    </div>
+  </div>
+</section>
