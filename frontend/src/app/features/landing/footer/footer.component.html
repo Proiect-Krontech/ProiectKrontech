@@ -1,0 +1,64 @@
+<footer class="footer">
+  <div class="container-pagina">
+
+
+    <div class="footer__grid">
+
+
+      <div class="footer__brand">
+
+        <div class="footer__logo">
+          <svg class="footer__logo-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="4" y="12" width="32" height="16" rx="8" fill="var(--culoare-primara)" opacity="0.15" />
+            <rect x="6" y="14" width="28" height="12" rx="6" stroke="var(--culoare-primara)" stroke-width="2"
+              fill="none" />
+            <path d="M14 20 L17 16 L20 24 L23 18 L26 20" stroke="var(--culoare-primara)" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          <span class="footer__logo-text">Smart Pillow</span>
+        </div>
+        <p class="footer__descriere">
+          Perna inteligentă care îți monitorizează postura coloanei
+          și te ajută să dormi mai sănătos. Tehnologie avansată
+          pentru confortul tău.
+        </p>
+      </div>
+
+      <div class="footer__coloana">
+        <h4 class="footer__coloana-titlu">Navigare</h4>
+        @for (link of linkuriNavigare(); track link.href) {
+        <a [href]="link.href" class="footer__link">{{ link.eticheta }}</a>
+        }
+      </div>
+
+      <div class="footer__coloana">
+        <h4 class="footer__coloana-titlu">Legal</h4>
+        @for (link of linkuriLegale(); track link.href) {
+        <a [href]="link.href" class="footer__link">{{ link.eticheta }}</a>
+        }
+      </div>
+
+      <div class="footer__coloana">
+        <h4 class="footer__coloana-titlu">Contact</h4>
+        <a href="mailto:contact&#64;smartpillow.ro" class="footer__link">
+          contact&#64;smartpillow.ro
+        </a>
+        <a href="tel:+40700000000" class="footer__link">
+          +40 700 000 000
+        </a>
+        <p class="footer__adresa">
+          București, România
+        </p>
+      </div>
+
+    </div>
+
+
+    <hr class="footer__separator" />
+
+    <div class="footer__copyright">
+      <p>&copy; {{ anCurent }} Smart Pillow. Toate drepturile rezervate.</p>
+    </div>
+
+  </div>
+</footer>
