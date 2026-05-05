@@ -1,1 +1,84 @@
-/* You can add global styles to this file, and also import other style files */
+:root {
+
+  --culoare-primara: #2563eb;
+  --culoare-primara-hover: #1d4ed8;
+  --culoare-primara-deschisa: #dbeafe;
+
+  --culoare-secundara: #059669;
+  --culoare-secundara-hover: #047857;
+
+  --culoare-accent: #7c3aed;
+  --culoare-accent-hover: #6d28d9;
+
+  --fundal-principal: #ffffff;
+  --fundal-secundar: #f8fafc;
+  --fundal-tertiar: #f1f5f9;
+
+  --text-principal: #0f172a;
+  --text-secundar: #475569;
+  --text-tertiar: #94a3b8;
+
+  --border-principal: #e2e8f0;
+  --border-secundar: #cbd5e1;
+
+  --alerta-info: #3b82f6;
+  --alerta-avertizare: #f59e0b;
+  --alerta-eroare: #ef4444;
+  --alerta-succes: #10b981;
+
+  --navbar-inaltime: 72px;
+  --max-latime-continut: 1200px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: var(--navbar-inaltime);
+}
+
+body {
+  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  color: var(--text-principal);
+  background-color: var(--fundal-principal);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.container-pagina {
+  max-width: var(--max-latime-continut);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+.sectiune {
+  padding-top: 5rem;
+  padding-bottom: 5rem;
+}
+
+.titlu-sectiune {
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: var(--text-principal);
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.subtitlu-sectiune {
+  font-size: 1.125rem;
+  color: var(--text-secundar);
+  text-align: center;
+  max-width: 640px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 3rem;
+}
