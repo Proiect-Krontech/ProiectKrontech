@@ -1,0 +1,38 @@
+<section id="cum-functioneaza" class="cum-functioneaza sectiune">
+  <div class="container-pagina">
+
+
+    <h2 class="titlu-sectiune">Cum Funcționează?</h2>
+    <p class="subtitlu-sectiune">
+      În doar 4 pași simpli, poți începe să îți monitorizezi
+      postura și să dormi mai sănătos.
+    </p>
+
+
+    <div class="stepper">
+
+
+      @for (pas of pasiFunctionare(); track pas.numar; let ultimul = $last) {
+      <div class="stepper__pas">
+
+
+        <div class="stepper__cerc">
+          <span class="stepper__numar">{{ pas.numar }}</span>
+        </div>
+
+
+        @if (!ultimul) {
+        <div class="stepper__linie"></div>
+        }
+
+        <div class="stepper__continut">
+          <span class="stepper__icon">{{ pas.icon }}</span>
+          <h3 class="stepper__titlu">{{ pas.titlu }}</h3>
+          <p class="stepper__descriere">{{ pas.descriere }}</p>
+        </div>
+      </div>
+      }
+
+    </div>
+  </div>
+</section>
