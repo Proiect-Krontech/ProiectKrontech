@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include <ArduinoJson.h>
 
 #include "Config.hpp"
 #include "utils/Logger.hpp"
@@ -7,6 +8,10 @@
 #include "posture/PostureData.hpp"
 #include "posture/PostureAnalyzer.hpp"
 #include "alerts/AlertManager.hpp"
+#include "StorageManager.hpp"
+#include "network/WifiManager.hpp"
+#include "network/HttpClient.hpp"
+
 
 static const char* TAG = "main";
 
@@ -16,29 +21,62 @@ static HX711Driver drv_bl(PinCfg::BL_DOUT, PinCfg::BL_SCK);
 static HX711Driver drv_br(PinCfg::BR_DOUT, PinCfg::BR_SCK);
 
 static SensorManager sensors(&drv_fl, &drv_fr, &drv_bl, &drv_br);
-
 static PostureAnalyzer analyzer;
-
 static AlertManager alert(PinCfg::BUZZER);
+static WifiManager     wifi;
+static HttpClient      http;
 
+static float              g_weight_kg      = CalibCfg::REFERENCE_WEIGHT_KG;
 static float              g_factor      = 1.0f;
 static WeightDistribution g_reference;
 static int                g_empty_count = 0;
+static bool               g_calibrated     = false;
+static bool               g_buzzer_enabled = true;
+static uint32_t           g_state_since    = 0;
+static bool               g_last_good      = true;
+static uint32_t           g_last_cmd_poll  = 0;
 
-void do_tare_and_calibrate() {
-    // PASUL 1: Tara
+static void do_calibrate() {
+    LOG_INFO(TAG, "=== CALIBRARE PORNITA ===");
     LOG_INFO(TAG, ">>> SCAUN GOL! Astept 5 secunde...");
     delay(CalibCfg::TARE_DELAY_MS);
     sensors.tare(CalibCfg::TARE_SAMPLES);
+    LOG_INFO(TAG, ">>> Tara OK.");
 
-    // PASUL 2: Calibrare
-    LOG_INFO(TAG, ">>> ASEAZA-TE DREPT! Astept 5 secunde...");
-    delay(CalibCfg::CALIB_DELAY_MS);
-    sensors.calibrate(CalibCfg::CALIB_SAMPLES,
-                      CalibCfg::REFERENCE_WEIGHT_KG,
-                      g_factor,
-                      g_reference);
+    LOG_INFO(TAG, ">>> ASEAZA-TE DREPT PE SCAUN si stai nemiscat...");
+
+    uint32_t stable_since = 0;
+    bool     seated       = false;
+
+    while (!seated) {
+        delay(200);
+        RawReadings raw   = sensors.read(1);
+        float kg          = static_cast<float>(raw.total()) / g_factor;
+
+        if (kg > PresenceCfg::EMPTY_THRESHOLD_KG) {
+            if (stable_since == 0) {
+                stable_since = millis();
+                LOG_INFO(TAG, ">>> Greutate detectata (%.1fkg). Stai nemiscat...", kg);
+            } else if (millis() - stable_since >= 2000) {
+                seated = true;
+            }
+        } else {
+            if (stable_since != 0) {
+                LOG_INFO(TAG, ">>> Greutate pierduta. Aseaza-te din nou...");
+            }
+            stable_since = 0;
+        }
+
+        wifi.maintain();
+    }
+
+    LOG_INFO(TAG, ">>> Pozitie detectata! Calibrez in 3 secunde... Stai drept!");
+    delay(3000);
+
+    sensors.calibrate(CalibCfg::CALIB_SAMPLES, g_weight_kg, g_factor, g_reference);
     analyzer.set_reference(g_reference);
+    StorageManager::save(g_weight_kg, g_factor, g_reference);
+    g_calibrated = true;
 
     LOG_INFO(TAG, "=== CALIBRARE COMPLETA ===");
     LOG_INFO(TAG, "Referinta DREPT -> FL:%.1f%%  FR:%.1f%%  BL:%.1f%%  BR:%.1f%%",
@@ -47,90 +85,149 @@ void do_tare_and_calibrate() {
     LOG_INFO(TAG, "Factor: %.2f", g_factor);
     LOG_INFO(TAG, "=== MONITORIZARE ACTIVA ===");
 
-    alert.on();
-    delay(800);
-    alert.off();
+    alert.on(); delay(800); alert.off();
+    
 }
 
-static uint32_t g_last_loop = 0;
+static void handle_command(const JsonDocument& doc) {
+    const char* cmd = doc["cmd"] | "";
+    if (strlen(cmd) == 0) return;
+
+    LOG_INFO(TAG, "Comanda primita: %s", cmd);
+
+    if (strcmp(cmd, "set_weight") == 0) {
+        float new_kg = doc["value"] | g_weight_kg;
+        if (new_kg > 5.0f && new_kg < 300.0f) {
+            g_factor    = g_factor * (new_kg / g_weight_kg);
+            g_weight_kg = new_kg;
+            StorageManager::save(g_weight_kg, g_factor, g_reference);
+            LOG_INFO(TAG, "Greutate setata: %.1fkg", g_weight_kg);
+        }
+    } else if (strcmp(cmd, "calibrate") == 0) {
+        do_calibrate();
+    } else if (strcmp(cmd, "buzzer_on") == 0) {
+        g_buzzer_enabled = true;
+        LOG_INFO(TAG, "Buzzer activat.");
+    } else if (strcmp(cmd, "buzzer_off") == 0) {
+        g_buzzer_enabled = false;
+        alert.off();
+        LOG_INFO(TAG, "Buzzer dezactivat.");
+    } else if (strcmp(cmd, "reset_calibration") == 0) {
+        StorageManager::clear();
+        g_calibrated = false;
+        LOG_INFO(TAG, "Calibrare resetata.");
+    }
+}
 
 void setup() {
     Serial.begin(SerialCfg::BAUD_RATE);
     delay(500);
 
+    LOG_INFO(TAG, "=== Smart Pillow v0.2.0 ===");
+
     alert.begin();
     sensors.begin();
     sensors.wait_until_ready();
 
-    do_tare_and_calibrate();
+    if (StorageManager::is_calibrated()) {
+        StorageManager::load(g_weight_kg, g_factor, g_reference);
+        analyzer.set_reference(g_reference);
+        g_calibrated = true;
+        LOG_INFO(TAG, "Calibrare incarcata din EEPROM. Factor=%.2f", g_factor);
+        alert.on(); delay(200); alert.off();
+        delay(100);
+        alert.on(); delay(200); alert.off();
+    } else {
+        LOG_INFO(TAG, "Nicio calibrare salvata. Apasa 'Porneste calibrare' din dashboard.");
+    }
 
-    g_last_loop = millis();
+    wifi.begin();
+
+    g_state_since = millis();
 }
 
+static uint32_t g_last_loop = 0;
+
+
 void loop() {
+    wifi.maintain();
+
+    if (millis() - g_last_cmd_poll >= ServerCfg::CMD_POLL_MS){
+       g_last_cmd_poll = millis();
+        if (wifi.is_connected()) {
+            StaticJsonDocument<128> cmd_doc;
+            if (http.get_command(cmd_doc)) {
+                handle_command(cmd_doc);
+            }
+        }
+    }
+
     if (millis() - g_last_loop < TimingCfg::LOOP_DELAY_MS) return;
     g_last_loop = millis();
 
+    if (!g_calibrated) return;
+
     RawReadings raw = sensors.read(CalibCfg::LOOP_SAMPLES);
-    long total_raw  = raw.total();
-    float kg_total  = static_cast<float>(total_raw) / g_factor;
+    float kg_total  = static_cast<float>(raw.total()) / g_factor;
 
     if (kg_total < PresenceCfg::EMPTY_THRESHOLD_KG) {
         g_empty_count++;
         if (g_empty_count >= PresenceCfg::AUTO_ZERO_ITERATIONS) {
             sensors.tare(CalibCfg::TARE_SAMPLES);
-            LOG_INFO(TAG, ">>> Zero resetat.");
+            LOG_INFO(TAG, "Auto-zero resetat.");
             g_empty_count = 0;
         }
         alert.off();
-        LOG_INFO(TAG, "STATUS: Scaun GOL | Total: %.2fkg", kg_total);
+
+        if (wifi.is_connected()) {
+            StaticJsonDocument<128> doc;
+            doc["device_id"]  = "PERNA001";
+            doc["posture"]    = "empty";
+            doc["kg"]         = 0;
+            doc["calibrated"] = g_calibrated;
+            StaticJsonDocument<64> cmd_doc;
+            http.post_data(doc, cmd_doc);
+        }
         return;
     }
     g_empty_count = 0;
 
     PostureResult result = analyzer.analyze(raw, g_factor);
+    bool good_now = result.is_good_posture();
 
-    float cur_fata   = result.current.front();
-    float cur_spate  = result.current.back();
-    float cur_stanga = result.current.left();
-    float cur_dreapta= result.current.right();
+   if (good_now != g_last_good) {
+        g_state_since = millis();
+        g_last_good   = good_now;
+    }
+    uint32_t state_duration_s = (millis() - g_state_since) / 1000UL;
 
-    float ref_fata   = g_reference.front();
-    float ref_spate  = g_reference.back();
-    float ref_stanga = g_reference.left();
-    float ref_dreapta= g_reference.right();
+    LOG_INFO(TAG, "[F/S] %s | [S/D] %s | %.1fkg | %lus",
+             to_cstr(result.front_back_status),
+             to_cstr(result.left_right_status),
+             kg_total, state_duration_s);
 
-    float diff_fata   = result.diff_front_back;
-    float diff_stanga = result.diff_left_right;
+    // ── Buzzer ─────────────────────────────────────────────────────────────
+    if (g_buzzer_enabled) {
+        good_now ? alert.off() : alert.on();
+    }
+    if (wifi.is_connected()) {
+        StaticJsonDocument<320> doc;
+        doc["device_id"]      = "PERNA001";
+        doc["timestamp"]      = millis();
+        doc["posture"]        = good_now ? "ok" : "bad";
+        doc["F"]              = serialized(String(result.current.front(), 1));
+        doc["S"]              = serialized(String(result.current.back(),  1));
+        doc["L"]              = serialized(String(result.current.left(),  1));
+        doc["R"]              = serialized(String(result.current.right(), 1));
+        doc["kg"]             = serialized(String(kg_total, 1));
+        doc["buzzer"]         = alert.is_active();
+        doc["calibrated"]     = g_calibrated;
+        doc["weight_ref"]     = serialized(String(g_weight_kg, 1));
+        doc["state_duration"] = state_duration_s;
 
-    LOG_INFO(TAG, "---");
-
-    LOG_INFO(TAG, "[FATA/SPATE]  Status: %s", to_cstr(result.front_back_status));
-    if (diff_fata >= 0)
-        LOG_INFO(TAG, "  Fata: %.1f%% (ref %.1f%%)  |  Spate: %.1f%% (ref %.1f%%)  |  Abatere: +%.1f%%",
-                 cur_fata, ref_fata, cur_spate, ref_spate, diff_fata);
-    else
-        LOG_INFO(TAG, "  Fata: %.1f%% (ref %.1f%%)  |  Spate: %.1f%% (ref %.1f%%)  |  Abatere: %.1f%%",
-                 cur_fata, ref_fata, cur_spate, ref_spate, diff_fata);
-
-    LOG_INFO(TAG, "[STANGA/DR]   Status: %s", to_cstr(result.left_right_status));
-    if (diff_stanga >= 0)
-        LOG_INFO(TAG, "  Stanga: %.1f%% (ref %.1f%%)  |  Dreapta: %.1f%% (ref %.1f%%)  |  Abatere: +%.1f%%",
-                 cur_stanga, ref_stanga, cur_dreapta, ref_dreapta, diff_stanga);
-    else
-        LOG_INFO(TAG, "  Stanga: %.1f%% (ref %.1f%%)  |  Dreapta: %.1f%% (ref %.1f%%)  |  Abatere: %.1f%%",
-                 cur_stanga, ref_stanga, cur_dreapta, ref_dreapta, diff_stanga);
-
-    LOG_INFO(TAG, "[SENZORI]     FL:%.1fkg  FR:%.1fkg  BL:%.1fkg  BR:%.1fkg  |  TOTAL: %.1fkg",
-             static_cast<float>(raw.fl) / g_factor,
-             static_cast<float>(raw.fr) / g_factor,
-             static_cast<float>(raw.bl) / g_factor,
-             static_cast<float>(raw.br) / g_factor,
-             kg_total);
-
-    if (result.is_good_posture()) {
-        alert.off();
-    } else {
-        alert.on();
+        StaticJsonDocument<128> cmd_doc;
+        if (http.post_data(doc, cmd_doc)) {
+            handle_command(cmd_doc);
+        }
     }
 }
