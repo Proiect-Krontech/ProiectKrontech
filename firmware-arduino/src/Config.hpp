@@ -1,9 +1,40 @@
 #pragma once
 #include <Arduino.h>
+#include "Secrets.hpp"
+
 
 #ifndef SMARTPILLOW_VERSION
-#define SMARTPILLOW_VERSION "0.1.0"
+#define SMARTPILLOW_VERSION "0.2.0"
 #endif
+
+namespace WifiCfg {
+
+    constexpr const char* SSID =
+        SecretCfg::SSID;
+
+    constexpr const char* PASSWORD =
+        SecretCfg::PASSWORD;
+
+    constexpr uint32_t RETRY_MS = 5000;
+}
+
+namespace ServerCfg {
+
+    constexpr const char* HOST =
+        SecretCfg::HOST;
+
+    constexpr uint16_t PORT = 3000;
+
+    constexpr const char* PATH_DATA =
+        "/api/data";
+
+    constexpr const char* PATH_COMMAND =
+        "/api/command";
+
+    constexpr uint32_t CMD_POLL_MS = 1000;
+
+    constexpr uint32_t HTTP_TIMEOUT_MS = 3000;
+}
 
 namespace PinCfg {
     constexpr uint8_t BL_DOUT = 3;
@@ -22,8 +53,8 @@ namespace CalibCfg {
     constexpr float REFERENCE_WEIGHT_KG = 60.0f;
     constexpr uint8_t TARE_SAMPLES      = 64;
     constexpr uint8_t CALIB_SAMPLES     = 64;
-    constexpr uint8_t LOOP_SAMPLES      = 10;
-    constexpr uint32_t TARE_DELAY_MS    = 5000;
+    constexpr uint8_t LOOP_SAMPLES      = 1;
+    constexpr uint32_t TARE_DELAY_MS    =  10000;
     constexpr uint32_t CALIB_DELAY_MS   = 5000;
 }
 
@@ -38,9 +69,25 @@ namespace PostureCfg {
 }
 
 namespace SerialCfg {
-    constexpr uint32_t BAUD_RATE = 9600;
+    constexpr uint32_t BAUD_RATE = 115200;
 }
 
 namespace TimingCfg {
     constexpr uint32_t LOOP_DELAY_MS = 500;
+}
+
+namespace EepromCfg {
+
+    constexpr uint16_t ADDR_MAGIC = 0;
+
+    constexpr uint32_t MAGIC_VALUE = 0xCAFE0001;
+
+    constexpr uint16_t ADDR_WEIGHT_KG = 4;
+    constexpr uint16_t ADDR_FACTOR    = 8;
+
+    constexpr uint16_t ADDR_REF_FL = 12;
+    constexpr uint16_t ADDR_REF_FR = 16;
+
+    constexpr uint16_t ADDR_REF_BL = 20;
+    constexpr uint16_t ADDR_REF_BR = 24;
 }
