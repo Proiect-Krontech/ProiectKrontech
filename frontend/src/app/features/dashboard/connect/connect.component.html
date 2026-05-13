@@ -1,0 +1,50 @@
+<div class="connect-page">
+  <div class="connect-card">
+
+    <div class="connect-card__logo">
+      <svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="6" y="18" width="48" height="24" rx="12" fill="var(--culoare-primara)" opacity="0.15" />
+        <rect x="9" y="21" width="42" height="18" rx="9" stroke="var(--culoare-primara)" stroke-width="2.5"
+          fill="none" />
+        <path d="M21 30 L25.5 24 L30 36 L34.5 27 L39 30" stroke="var(--culoare-primara)" stroke-width="2.5"
+          stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </div>
+
+    <h1 class="connect-card__title">Conecteaza Perna</h1>
+    <p class="connect-card__description">
+      Introdu codul de activare primit dupa plasarea comenzii
+      pentru a accesa dashboard-ul de monitorizare a posturii.
+    </p>
+
+    <div class="connect-card__input-group">
+      <label for="activation-code" class="connect-card__label">
+        Cod de Activare
+      </label>
+      <input id="activation-code" type="text" class="connect-card__input" placeholder="ex. SP-A3F8K2"
+        [value]="codeInput()" (input)="onCodeChange($any($event.target).value)" (keyup.enter)="validateCode()"
+        [disabled]="isLoading()" maxlength="9" autocomplete="off" />
+    </div>
+
+    @if (errorMessage()) {
+    <div class="connect-card__error">
+      {{ errorMessage() }}
+    </div>
+    }
+
+    <button class="connect-card__button" (click)="validateCode()" [disabled]="isLoading()">
+      @if (isLoading()) {
+      <span class="connect-card__spinner"></span>
+      Se valideaza...
+      } @else {
+      Conecteaza la Dashboard
+      }
+    </button>
+
+    <p class="connect-card__help">
+      Nu ai un cod?
+      <a href="/#marimi" class="connect-card__link">Comanda o Smart Pillow</a>
+    </p>
+
+  </div>
+</div>

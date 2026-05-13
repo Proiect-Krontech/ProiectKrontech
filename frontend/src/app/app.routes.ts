@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 
 export const rpiectRoutes: Routes = [
   {
+
     path: '',
     loadComponent: () =>
       import('./features/landing/landing.component')
@@ -9,6 +10,7 @@ export const rpiectRoutes: Routes = [
     title: 'Smart Pillow — Perna Inteligentă pentru Postura Ta'
   },
   {
+
     path: 'dashboard',
     loadComponent: () =>
       import('./features/dashboard/dashboard.component')
@@ -16,6 +18,7 @@ export const rpiectRoutes: Routes = [
     title: 'Smart Pillow — Dashboard Monitorizare'
   },
   {
+
     path: '**',
     redirectTo: '',
     pathMatch: 'full'
