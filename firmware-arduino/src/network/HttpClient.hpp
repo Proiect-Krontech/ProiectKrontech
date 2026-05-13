@@ -30,11 +30,13 @@ public:
 
         if (response.length() > 2) {
             DeserializationError err = deserializeJson(out_cmd, response);
+
             if (!err && out_cmd.containsKey("cmd")) {
                 LOG_INFO("HTTP", "Comanda in raspuns: %s", response.c_str());
                 return true;
             }
         }
+
         return false;
     }
 
@@ -55,10 +57,12 @@ public:
         if (response.length() <= 2) return false;
 
         DeserializationError err = deserializeJson(out_cmd, response);
+
         if (!err && out_cmd.containsKey("cmd")) {
             LOG_INFO("HTTP", "Comanda primita: %s", response.c_str());
             return true;
         }
+
         return false;
     }
 
@@ -66,10 +70,33 @@ private:
     WiFiClient _client;
 
     bool _connect() {
-        if (!_client.connect(ServerCfg::HOST, ServerCfg::PORT)) {
-            LOG_ERROR("HTTP", "Nu pot conecta la %s:%d", ServerCfg::HOST, ServerCfg::PORT);
+        _client.stop();
+
+        LOG_INFO("HTTP", "Conectare la %s:%d ...",
+                 ServerCfg::HOST,
+                 ServerCfg::PORT);
+
+        LOG_INFO("HTTP", "IP local: %s",
+                 WiFi.localIP().toString().c_str());
+
+        IPAddress serverIP;
+
+        if (!serverIP.fromString(ServerCfg::HOST)) {
+            LOG_ERROR("HTTP", "IP invalid: %s", ServerCfg::HOST);
             return false;
         }
+
+        if (!_client.connect(serverIP, ServerCfg::PORT)) {
+            LOG_ERROR("HTTP",
+                      "Nu pot conecta la %s:%d (WiFi status: %d)",
+                      ServerCfg::HOST,
+                      ServerCfg::PORT,
+                      WiFi.status());
+
+            return false;
+        }
+
+        LOG_INFO("HTTP", "Conectat la server!");
         return true;
     }
 
@@ -77,16 +104,21 @@ private:
         uint32_t start = millis();
         String raw = "";
 
-        while (_client.connected() && millis() - start < ServerCfg::HTTP_TIMEOUT_MS) {
+        while (_client.connected() &&
+               millis() - start < ServerCfg::HTTP_TIMEOUT_MS) {
+
             if (_client.available()) {
                 raw += (char)_client.read();
             }
         }
 
         int sep = raw.indexOf("\r\n\r\n");
+
         if (sep == -1) return "";
+
         String body = raw.substring(sep + 4);
         body.trim();
+
         return body;
     }
 };
