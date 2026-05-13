@@ -5,17 +5,12 @@
 #include <Arduino.h>
 
 
-// ──────────────────────────────────────────────────────────────────────────────
-//PostureAnalyzer — receives RawReadings + factor and produces a PostureResult
-// ──────────────────────────────────────────────────────────────────────────────
-
 class PostureAnalyzer {
 public:
     PostureAnalyzer() = default;
 
     void set_reference(const WeightDistribution& ref);
 
-    // Analyzes a reading and returns the full result
     PostureResult analyze(const RawReadings& raw,
                           float              factor) const;
 

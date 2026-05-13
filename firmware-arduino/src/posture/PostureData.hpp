@@ -1,10 +1,6 @@
 #pragma once
 #include <Arduino.h>
 
-// ──────────────────────────────────────────────────────────────────────────────
-//  PostureData
-// ──────────────────────────────────────────────────────────────────────────────
-
 enum class PostureAxisStatus : uint8_t {
     STRAIGHT,       
     LEANING_FRONT,  
