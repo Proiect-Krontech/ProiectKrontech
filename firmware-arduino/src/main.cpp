@@ -165,7 +165,22 @@ void loop() {
     if (millis() - g_last_loop < TimingCfg::LOOP_DELAY_MS) return;
     g_last_loop = millis();
 
-    if (!g_calibrated) return;
+    if (!g_calibrated){
+        if (wifi.is_connected()) {
+            StaticJsonDocument<128> doc;
+            doc["device_id"]  = "PERNA001";
+            doc["posture"]    = "empty";
+            doc["kg"]         = 0;
+            doc["calibrated"] = false;
+            doc["buzzer"]     = g_buzzer_enabled;
+            doc["weight_ref"] = serialized(String(g_weight_kg, 1));
+            StaticJsonDocument<64> cmd_doc;
+            if (http.post_data(doc, cmd_doc)) {
+                handle_command(cmd_doc);
+            }
+        }
+        return;
+    }
 
     RawReadings raw = sensors.read(CalibCfg::LOOP_SAMPLES);
     float kg_total  = static_cast<float>(raw.total()) / g_factor;
@@ -214,7 +229,7 @@ void loop() {
         StaticJsonDocument<320> doc;
         doc["device_id"]      = "PERNA001";
         doc["timestamp"]      = millis();
-        doc["posture"]        = good_now ? "ok" : "bad";
+        doc["posture"]        = good_now ? "good" : "bad";
         doc["F"]              = serialized(String(result.current.front(), 1));
         doc["S"]              = serialized(String(result.current.back(),  1));
         doc["L"]              = serialized(String(result.current.left(),  1));
