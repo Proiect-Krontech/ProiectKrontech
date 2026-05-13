@@ -1,6 +1,5 @@
 #pragma once
 #include <Arduino.h>
-#include "Secrets.hpp"
 
 
 #ifndef SMARTPILLOW_VERSION
@@ -9,31 +8,20 @@
 
 namespace WifiCfg {
 
-    constexpr const char* SSID =
-        SecretCfg::SSID;
-
-    constexpr const char* PASSWORD =
-        SecretCfg::PASSWORD;
-
-    constexpr uint32_t RETRY_MS = 5000;
+    constexpr const char* SSID     = "202";   
+    constexpr const char* PASSWORD = "Panini2025";   
+    constexpr uint32_t    RETRY_MS = 5000;
 }
+
 
 namespace ServerCfg {
 
-    constexpr const char* HOST =
-        SecretCfg::HOST;
-
-    constexpr uint16_t PORT = 3000;
-
-    constexpr const char* PATH_DATA =
-        "/api/data";
-
-    constexpr const char* PATH_COMMAND =
-        "/api/command";
-
-    constexpr uint32_t CMD_POLL_MS = 1000;
-
-    constexpr uint32_t HTTP_TIMEOUT_MS = 3000;
+    constexpr const char* HOST          = "192.168.0.106";
+    constexpr uint16_t    PORT          = 3000;
+    constexpr const char* PATH_DATA     = "/api/data?code=SP-MW7ZF6";
+    constexpr const char* PATH_COMMAND  = "/api/command?code=SP-MW7ZF6";
+    constexpr uint32_t    CMD_POLL_MS   = 1000;
+    constexpr uint32_t    HTTP_TIMEOUT_MS = 3000;
 }
 
 namespace PinCfg {
@@ -51,11 +39,11 @@ namespace PinCfg {
 namespace CalibCfg {
 
     constexpr float REFERENCE_WEIGHT_KG = 60.0f;
-    constexpr uint8_t TARE_SAMPLES      = 64;
-    constexpr uint8_t CALIB_SAMPLES     = 64;
+    constexpr uint8_t TARE_SAMPLES      = 16;
+    constexpr uint8_t CALIB_SAMPLES     = 16;
     constexpr uint8_t LOOP_SAMPLES      = 1;
-    constexpr uint32_t TARE_DELAY_MS    =  10000;
-    constexpr uint32_t CALIB_DELAY_MS   = 5000;
+    constexpr uint32_t TARE_DELAY_MS    = 5000;
+    constexpr uint32_t CALIB_DELAY_MS   = 12000;
 }
 
 namespace PresenceCfg {
