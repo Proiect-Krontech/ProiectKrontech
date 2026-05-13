@@ -1,140 +1,137 @@
 <section id="cos" class="cos sectiune">
   <div class="container-pagina">
 
-    <h2 class="titlu-sectiune">Coșul Tău</h2>
-    <p class="subtitlu-sectiune">n 
-      Verifică articolele selectate și plasează comanda.
+    <h2 class="titlu-sectiune">Cosul Tau</h2>
+    <p class="subtitlu-sectiune">
+      Verifica articolele selectate si plaseaza comanda.
     </p>
 
-   
-    @if (comandaPlasata()) {
-      <div class="cos__confirmare">
-        <span class="cos__confirmare-icon">&#10003;</span>
-        <h3 class="cos__confirmare-titlu">Comanda a fost plasată cu succes!</h3>
-        <p class="cos__confirmare-text">
-          Vei primi un email cu detaliile comenzii și codul de activare
-          pentru fiecare pernă comandată.
-        </p>
+    @if (orderPlaced()) {
+    <div class="cos__confirmare">
+      <span class="cos__confirmare-icon">&#10003;</span>
+      <h3 class="cos__confirmare-titlu">Comanda a fost plasata cu succes!</h3>
+      <p class="cos__confirmare-text">
+        Mai jos sunt codurile tale de activare. Foloseste-le pentru a conecta
+        pernele la dashboard-ul de monitorizare.
+      </p>
+
+      <div class="cos__coduri">
+        @for (entry of activationCodes(); track entry.code) {
+        <div class="cos__cod-card">
+          <span class="cos__cod-marime">Marime {{ entry.pillowSize }}</span>
+          <span class="cos__cod-valoare">{{ entry.code }}</span>
+          <span class="cos__cod-cantitate">Cantitate: {{ entry.quantity }}</span>
+        </div>
+        }
       </div>
+
+      <p class="cos__confirmare-nota">
+        Salveaza aceste coduri! Vei avea nevoie de ele pentru a accesa
+        <a routerLink="/dashboard" class="cos__confirmare-link">Dashboard-ul</a>.
+      </p>
+
+      <button class="cos__buton-nou" (click)="newOrder()">
+        Plaseaza o noua comanda
+      </button>
+    </div>
     }
 
- 
-    @if (store.esteGol() && !comandaPlasata()) {
-      <!-- Coșul gol — mesaj informativ -->
-      <div class="cos__gol">
-        <span class="cos__gol-icon">&#128722;</span>
-        <p class="cos__gol-text">Coșul tău este gol.</p>
-        <a href="#marimi" class="cos__gol-link">
-          Alege o pernă de mai sus
-        </a>
-      </div>
+    @if (store.esteGol() && !orderPlaced()) {
+    <div class="cos__gol">
+      <span class="cos__gol-icon">&#128722;</span>
+      <p class="cos__gol-text">Cosul tau este gol.</p>
+      <a href="#marimi" class="cos__gol-link">
+        Alege o perna de mai sus
+      </a>
+    </div>
     }
 
+    @if (!store.esteGol() && !orderPlaced()) {
+    <div class="cos__continut">
 
-    @if (!store.esteGol() && !comandaPlasata()) {
-      <div class="cos__continut">
+      <div class="cos__lista">
+        @for (articol of store.articole(); track articol.varianta.id) {
+        <div class="cos__articol">
 
-       
-        <div class="cos__lista">
-
-        
-          @for (articol of store.articole(); track articol.varianta.id) {
-            <div class="cos__articol">
-
-              
-              <div class="cos__articol-info">
-                <span class="cos__articol-marime">
-                  {{ articol.varianta.marime }}
-                </span>
-                <div class="cos__articol-detalii">
-                  <span class="cos__articol-eticheta">
-                    Smart Pillow — {{ articol.varianta.eticheta }}
-                  </span>
-                  <span class="cos__articol-dimensiuni">
-                    {{ articol.varianta.dimensiuni }}
-                  </span>
-                </div>
-              </div>
-
-              
-              <div class="cos__articol-cantitate">
-                <button
-                  class="cos__buton-cantitate"
-                  (click)="scadeCantitate(articol.varianta.id, articol.cantitate)"
-                  [attr.aria-label]="'Scade cantitate ' + articol.varianta.eticheta">
-                  &minus;
-                </button>
-                <span class="cos__cantitate-valoare">
-                  {{ articol.cantitate }}
-                </span>
-                <button
-                  class="cos__buton-cantitate"
-                  (click)="cresceCantitate(articol.varianta.id, articol.cantitate)"
-                  [attr.aria-label]="'Crește cantitate ' + articol.varianta.eticheta">
-                  &plus;
-                </button>
-              </div>
-
-              
-              <div class="cos__articol-pret">
-                {{ articol.varianta.pret * articol.cantitate }} RON
-              </div>
-
-              
-              <button
-                class="cos__buton-sterge"
-                (click)="stergeArticol(articol.varianta.id)"
-                [attr.aria-label]="'Șterge ' + articol.varianta.eticheta + ' din coș'">
-                &#10005;
-              </button>
-
+          <div class="cos__articol-info">
+            <span class="cos__articol-marime">
+              {{ articol.varianta.marime }}
+            </span>
+            <div class="cos__articol-detalii">
+              <span class="cos__articol-eticheta">
+                Smart Pillow — {{ articol.varianta.eticheta }}
+              </span>
+              <span class="cos__articol-dimensiuni">
+                {{ articol.varianta.dimensiuni }}
+              </span>
             </div>
-          }
-
-        </div>
-
-        
-        <div class="cos__rezumat">
-
-          
-          <div class="cos__rezumat-linie">
-            <span>Articole în coș:</span>
-          
-            <span>{{ store.numarArticole() }} buc.</span>
           </div>
 
-          
-          <div class="cos__rezumat-linie">
-            <span>Livrare:</span>
-            <span class="cos__livrare-gratuita">Gratuită</span>
+          <div class="cos__articol-cantitate">
+            <button class="cos__buton-cantitate" (click)="decreaseQuantity(articol.varianta.id, articol.cantitate)"
+              [attr.aria-label]="'Scade cantitate ' + articol.varianta.eticheta">
+              &minus;
+            </button>
+            <span class="cos__cantitate-valoare">
+              {{ articol.cantitate }}
+            </span>
+            <button class="cos__buton-cantitate" (click)="increaseQuantity(articol.varianta.id, articol.cantitate)"
+              [attr.aria-label]="'Creste cantitate ' + articol.varianta.eticheta">
+              &plus;
+            </button>
           </div>
 
-          
-          <hr class="cos__separator" />
-
-          
-          <div class="cos__rezumat-linie cos__rezumat-total">
-            <span>Total:</span>
-           
-            <span>{{ store.pretTotal() }} RON</span>
+          <div class="cos__articol-pret">
+            {{ articol.varianta.pret * articol.cantitate }} RON
           </div>
 
-          
-          <button
-            class="cos__buton-comanda"
-            (click)="plaseazaComanda()">
-            Plasează Comanda
-          </button>
-
-          <button
-            class="cos__buton-goleste"
-            (click)="golesteCosu()">
-            Golește Coșul
+          <button class="cos__buton-sterge" (click)="removeItem(articol.varianta.id)"
+            [attr.aria-label]="'Sterge ' + articol.varianta.eticheta">
+            &#10005;
           </button>
 
         </div>
-
+        }
       </div>
+
+      <div class="cos__rezumat">
+        <div class="cos__rezumat-linie">
+          <span>Articole in cos:</span>
+          <span>{{ store.numarArticole() }} buc.</span>
+        </div>
+
+        <div class="cos__rezumat-linie">
+          <span>Livrare:</span>
+          <span class="cos__livrare-gratuita">Gratuita</span>
+        </div>
+
+        <hr class="cos__separator" />
+
+        <div class="cos__rezumat-linie cos__rezumat-total">
+          <span>Total:</span>
+          <span>{{ store.pretTotal() }} RON</span>
+        </div>
+
+        @if (orderError()) {
+        <div class="cos__error">
+          {{ orderError() }}
+        </div>
+        }
+
+        <button class="cos__buton-comanda" (click)="placeOrder()" [disabled]="isProcessing()">
+          @if (isProcessing()) {
+          Se proceseaza...
+          } @else {
+          Plaseaza Comanda
+          }
+        </button>
+
+        <button class="cos__buton-goleste" (click)="clearCart()">
+          Goleste Cosul
+        </button>
+      </div>
+
+    </div>
     }
 
   </div>
