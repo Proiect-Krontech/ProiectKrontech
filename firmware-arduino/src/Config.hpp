@@ -16,7 +16,7 @@ namespace WifiCfg {
 
 namespace ServerCfg {
 
-    constexpr const char* HOST          = "192.168.0.106";
+    constexpr const char* HOST          = "192.168.0.100";
     constexpr uint16_t    PORT          = 3000;
     constexpr const char* PATH_DATA     = "/api/data?code=SP-MW7ZF6";
     constexpr const char* PATH_COMMAND  = "/api/command?code=SP-MW7ZF6";

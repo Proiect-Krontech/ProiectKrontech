@@ -1,9 +1,9 @@
 <section id="cos" class="cos sectiune">
   <div class="container-pagina">
 
-    <h2 class="titlu-sectiune">Cosul Tau</h2>
+    <h2 class="titlu-sectiune">Coșul Tau</h2>
     <p class="subtitlu-sectiune">
-      Verifica articolele selectate si plaseaza comanda.
+      Verifică articolele selectate și plasează comanda.
     </p>
 
     @if (orderPlaced()) {
@@ -11,7 +11,7 @@
       <span class="cos__confirmare-icon">&#10003;</span>
       <h3 class="cos__confirmare-titlu">Comanda a fost plasata cu succes!</h3>
       <p class="cos__confirmare-text">
-        Mai jos sunt codurile tale de activare. Foloseste-le pentru a conecta
+        Mai jos sunt codurile tale de activare. Folosește-le pentru a conecta
         pernele la dashboard-ul de monitorizare.
       </p>
 
@@ -26,12 +26,12 @@
       </div>
 
       <p class="cos__confirmare-nota">
-        Salveaza aceste coduri! Vei avea nevoie de ele pentru a accesa
-        <a routerLink="/dashboard" class="cos__confirmare-link">Dashboard-ul</a>.
+        Salvează aceste coduri! Vei avea nevoie de ele pentru a accesa
+        <a href="/dashboard" class="cos__confirmare-link">Dashboard-ul</a>
       </p>
 
       <button class="cos__buton-nou" (click)="newOrder()">
-        Plaseaza o noua comanda
+        Plasează o noua comandă
       </button>
     </div>
     }
@@ -41,7 +41,7 @@
       <span class="cos__gol-icon">&#128722;</span>
       <p class="cos__gol-text">Cosul tau este gol.</p>
       <a href="#marimi" class="cos__gol-link">
-        Alege o perna de mai sus
+        Alege o pernă de mai sus
       </a>
     </div>
     }
@@ -96,13 +96,13 @@
 
       <div class="cos__rezumat">
         <div class="cos__rezumat-linie">
-          <span>Articole in cos:</span>
+          <span>Articole in coș:</span>
           <span>{{ store.numarArticole() }} buc.</span>
         </div>
 
         <div class="cos__rezumat-linie">
           <span>Livrare:</span>
-          <span class="cos__livrare-gratuita">Gratuita</span>
+          <span class="cos__livrare-gratuita">Gratuită</span>
         </div>
 
         <hr class="cos__separator" />
@@ -120,14 +120,14 @@
 
         <button class="cos__buton-comanda" (click)="placeOrder()" [disabled]="isProcessing()">
           @if (isProcessing()) {
-          Se proceseaza...
+          Se procesează...
           } @else {
-          Plaseaza Comanda
+          Plasează Comanda
           }
         </button>
 
         <button class="cos__buton-goleste" (click)="clearCart()">
-          Goleste Cosul
+          Golește Coșul
         </button>
       </div>
 

@@ -64,8 +64,13 @@
 }
 
 @keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
 }
 
 .dashboard__disconnect {
@@ -99,8 +104,14 @@
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-4px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .dashboard__grid {
@@ -109,17 +120,36 @@
   gap: 1.5rem;
 }
 
-.dashboard__card--posture    { grid-column: 1; }
-.dashboard__card--weight     { grid-column: 2; }
-.dashboard__card--sensors    { grid-column: 3; }
-.dashboard__card--balance    { grid-column: 4; }
-.dashboard__card--commands   { grid-column: 1 / 3; }
-.dashboard__card--ref-weight { grid-column: 3 / 5; }
-.dashboard__card--history    { grid-column: 1 / 5; }
-.dashboard__card--score      { grid-column: 1; }
-.dashboard__card--distribution { grid-column: 2; }
-.dashboard__card--stats      { grid-column: 3 / 5; }
-.dashboard__card--weekly     { grid-column: 1 / 5; }
+.dashboard__card--posture {
+  grid-column: 1 / 3;
+}
+.dashboard__card--sensors {
+  grid-column: 3;
+}
+.dashboard__card--balance {
+  grid-column: 4;
+}
+.dashboard__card--commands {
+  grid-column: 1 / 3;
+}
+.dashboard__card--ref-weight {
+  grid-column: 3 / 5;
+}
+.dashboard__card--history {
+  grid-column: 1 / 5;
+}
+.dashboard__card--score {
+  grid-column: 1;
+}
+.dashboard__card--distribution {
+  grid-column: 2;
+}
+.dashboard__card--stats {
+  grid-column: 3 / 5;
+}
+.dashboard__card--weekly {
+  grid-column: 1 / 5;
+}
 
 .dashboard__card {
   background-color: var(--fundal-principal);
@@ -432,9 +462,15 @@
   color: var(--text-principal);
 }
 
-.dashboard__stat-value--correct  { color: #22c55e; }
-.dashboard__stat-value--attention { color: #f59e0b; }
-.dashboard__stat-value--wrong    { color: #ef4444; }
+.dashboard__stat-value--correct {
+  color: #22c55e;
+}
+.dashboard__stat-value--attention {
+  color: #f59e0b;
+}
+.dashboard__stat-value--wrong {
+  color: #ef4444;
+}
 
 .dashboard__loading {
   display: flex;
@@ -456,7 +492,9 @@
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .dashboard__no-data {
@@ -479,8 +517,12 @@
 }
 
 @keyframes calib-fade-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .calib-card {
@@ -526,8 +568,12 @@
 }
 
 @keyframes calib-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .calib-number {
@@ -592,17 +638,36 @@
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .dashboard__card--posture      { grid-column: 1; }
-  .dashboard__card--weight       { grid-column: 2; }
-  .dashboard__card--sensors      { grid-column: 1; }
-  .dashboard__card--balance      { grid-column: 2; }
-  .dashboard__card--commands     { grid-column: 1 / 3; }
-  .dashboard__card--ref-weight   { grid-column: 1 / 3; }
-  .dashboard__card--history      { grid-column: 1 / 3; }
-  .dashboard__card--score        { grid-column: 1; }
-  .dashboard__card--distribution { grid-column: 2; }
-  .dashboard__card--stats        { grid-column: 1 / 3; }
-  .dashboard__card--weekly       { grid-column: 1 / 3; }
+  .dashboard__card--posture {
+    grid-column: 1 / -1;
+  }
+  .dashboard__card--sensors {
+    grid-column: 1;
+  }
+  .dashboard__card--balance {
+    grid-column: 2;
+  }
+  .dashboard__card--commands {
+    grid-column: 1 / 3;
+  }
+  .dashboard__card--ref-weight {
+    grid-column: 1 / 3;
+  }
+  .dashboard__card--history {
+    grid-column: 1 / 3;
+  }
+  .dashboard__card--score {
+    grid-column: 1;
+  }
+  .dashboard__card--distribution {
+    grid-column: 2;
+  }
+  .dashboard__card--stats {
+    grid-column: 1 / 3;
+  }
+  .dashboard__card--weekly {
+    grid-column: 1 / 3;
+  }
 
   .dashboard__stats-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -630,7 +695,6 @@
   }
 
   .dashboard__card--posture,
-  .dashboard__card--weight,
   .dashboard__card--sensors,
   .dashboard__card--balance,
   .dashboard__card--commands,
