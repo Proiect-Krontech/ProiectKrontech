@@ -9,38 +9,36 @@ analyzes posture and sends data via WiFi.
 ## Project Structure
 
 ```
-firmware/
+firmware-arduino/
 ├── src/
-│   ├── Config.hpp                  ← all constants (pins, thresholds, timings)
-│   ├── Secrets.hpp                 ← WiFi / API credentials template (do not commit real values)
-│   ├── StorageManager.hpp          ← local storage management
-│   ├── main.cpp                    ← setup() + loop()
+│   ├── Config.hpp                   ← all constants (pins, thresholds, timings)
+│   ├── Secrets.hpp                  ← WiFi / API credentials template (do not commit real values)
+│   ├── StorageManager.hpp           ← local storage management
+│   ├── main.cpp                     ← setup() + loop()
 │   │
 │   ├── sensors/
-│   │   ├── ILoadCell.hpp           ← pure interface
-│   │   ├── HX711Driver.hpp/.cpp    ← real driver
-│   │   └── SensorManager.hpp/.cpp  ← orchestration + sliding average
+│   │   ├── ILoadCell.hpp            ← pure interface
+│   │   ├── HX711Driver.hpp/.cpp     ← real driver
+│   │   └── SensorManager.hpp/.cpp   ← orchestration + sliding average
 │   │
 │   ├── posture/
-│   │   ├── PostureData.hpp         ← data structures (PostureResult, enums)
+│   │   ├── PostureData.hpp          ← data structures (PostureResult, enums)
 │   │   └── PostureAnalyzer.hpp/.cpp ← posture detection algorithm
 │   │
 │   ├── alerts/
-│   │   └── AlertManager.hpp/.cpp   ← non-blocking alert management
+│   │   └── AlertManager.hpp/.cpp    ← non-blocking alert management
 │   │
 │   ├── network/
-│   │   ├── WifiManager.hpp         ← WiFi connection and management
-│   │   └── HttpClient.hpp          ← sends data to server via HTTP
+│   │   ├── WifiManager.hpp          ← WiFi connection and management
+│   │   └── HttpClient.hpp           ← sends data to server via HTTP
 │   │
 │   └── utils/
-│       └── Logger.hpp              ← centralized logging with levels
+│       └── Logger.hpp               ← centralized logging with levels
 │
 ├── test/
-│   └── test_native/
-│       ├── test_alert_manager.cpp
-│       ├── test_posture_analyzer.cpp
-│       ├── test_sensor_manager.cpp
-│       └── test_posture_data.cpp
+│   ├── mock_arduino.hpp             ← Arduino mock for native testing
+│   ├── test_posture.cpp             ← posture analyzer unit tests
+│   └── README                      ← test documentation
 │
 └── platformio.ini
 ```
@@ -59,7 +57,6 @@ pip install platformio
 ### 2. Run unit tests (no hardware required)
 
 ```bash
-cd firmware
 pio test -e native
 ```
 
@@ -80,13 +77,6 @@ pio run -e uno_r4_wifi --target upload
 ```bash
 pio device monitor --baud 115200
 ```
-
----
-
-## Credentials Setup
-
-In `src/Secrets.hpp`, replace the placeholder values with your local configuration.
-> **Warning:** Do not commit real credentials.
 
 ---
 
