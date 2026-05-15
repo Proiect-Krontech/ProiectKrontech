@@ -12,7 +12,6 @@ analyzes posture and sends data via WiFi.
 firmware-arduino/
 ├── src/
 │   ├── Config.hpp                   ← all constants (pins, thresholds, timings)
-│   ├── Secrets.hpp                  ← WiFi / API credentials template (do not commit real values)
 │   ├── StorageManager.hpp           ← local storage management
 │   ├── main.cpp                     ← setup() + loop()
 │   │
