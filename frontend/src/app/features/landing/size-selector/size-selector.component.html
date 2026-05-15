@@ -1,0 +1,105 @@
+
+
+<section id="marimi" class="marimi sectiune">
+  <div class="container-pagina">
+
+   
+    <h2 class="titlu-sectiune">Alege Mărimea Potrivită</h2>
+    <p class="subtitlu-sectiune">
+      Fiecare mărime este proiectată ergonomic pentru diferite
+      tipuri de corp. Toate includ aceiași senzori de înaltă precizie.
+    </p>
+
+
+    <div class="marimi__grid">
+
+ 
+      @for (varianta of variante(); track varianta.id) {
+        <article
+          class="marimi__card"
+          [class.marimi__card--activ]="esteSelectata(varianta.marime)"
+          [class.marimi__card--indisponibil]="!varianta.inStoc"
+          (click)="selecteazaMarime(varianta.marime)"
+          [attr.aria-selected]="esteSelectata(varianta.marime)"
+          role="option"
+          [attr.aria-disabled]="!varianta.inStoc">
+
+       
+          @if (varianta.marime === 'M') {
+            <span class="marimi__badge marimi__badge--popular">
+              Cel mai popular
+            </span>
+          }
+
+          @if (!varianta.inStoc) {
+            <span class="marimi__badge marimi__badge--indisponibil">
+              Indisponibil
+            </span>
+          }
+
+         
+          <div class="marimi__litera">
+            {{ varianta.marime }}
+          </div>
+
+         
+          <h3 class="marimi__eticheta">{{ varianta.eticheta }}</h3>
+          <p class="marimi__dimensiuni">{{ varianta.dimensiuni }}</p>
+
+          <!-- Prețul -->
+          <div class="marimi__pret">
+            <span class="marimi__pret-valoare">{{ varianta.pret }}</span>
+            <span class="marimi__pret-moneda">RON</span>
+          </div>
+
+        
+          <p class="marimi__descriere">{{ varianta.descriere }}</p>
+
+        
+          <div class="marimi__selector">
+      
+            @if (esteSelectata(varianta.marime)) {
+              <svg viewBox="0 0 24 24" fill="none" class="marimi__selector-icon">
+                <circle cx="12" cy="12" r="11" fill="var(--culoare-primara)" stroke="var(--culoare-primara)" stroke-width="2"/>
+                <path d="M7 12.5L10.5 16L17 9" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            } @else {
+              <svg viewBox="0 0 24 24" fill="none" class="marimi__selector-icon">
+                <circle cx="12" cy="12" r="11" fill="none" stroke="var(--border-secundar)" stroke-width="2"/>
+              </svg>
+            }
+          </div>
+
+        </article>
+      }
+
+    </div>
+
+
+    @if (variantaSelectata(); as varianta) {
+      <div class="marimi__rezumat">
+        <div class="marimi__rezumat-info">
+          <span class="marimi__rezumat-eticheta">
+            Ai selectat: <strong>{{ varianta.eticheta }}</strong> ({{ varianta.dimensiuni }})
+          </span>
+          <span class="marimi__rezumat-pret">
+            {{ varianta.pret }} RON
+          </span>
+        </div>
+        <button
+          class="marimi__buton-cos"
+          (click)="adaugaInCos()"
+          [disabled]="!varianta.inStoc">
+          Adaugă în Coș
+        </button>
+      </div>
+    }
+
+    
+    <p class="marimi__nota">
+      Livrare gratuită în 2-3 zile lucrătoare. Garanție 2 ani.
+      Retur gratuit în 30 de zile.
+    </p>
+
+  </div>
+</section>

@@ -14,35 +14,5 @@ Thumbs.db
 *.db
 *.sqlite
 
-# KiCad
-*-backups/
-*.bak
-*.kicad_pcb-bak
-*.kicad_sch-bak
-*.kicad_prl
-fp-info-cache
-*-cache.lib
-sym-lib-table-bak
-fp-lib-table-bak
-*.lck
-~*.lck
-_autosave-*
-*.autosave
-
-# KiCad output (gerber, drill, BOM)
-gerbers/
-plot/
-*.gbr
-*.gbl
-*.gbo
-*.gbp
-*.gbs
-*.gtl
-*.gto
-*.gtp
-*.gts
-*.drl
-*.xln
-*.pos
-*.rpt
-*.net
+frontend/test/cypress/videos
+frontend/test/cypress/screenshots

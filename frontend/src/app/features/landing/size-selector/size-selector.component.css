@@ -1,0 +1,240 @@
+.marimi {
+  background-color: var(--fundal-principal);
+}
+
+.marimi__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+
+.marimi__card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 2rem 1.5rem;
+  background-color: var(--fundal-secundar);
+  border: 2px solid var(--border-principal);
+  border-radius: 1rem;
+  cursor: pointer;
+  transition: border-color 0.25s ease,
+              transform 0.2s ease,
+              box-shadow 0.25s ease;
+
+  user-select: none;
+}
+
+
+.marimi__card:not(.marimi__card--indisponibil):hover {
+  border-color: var(--culoare-primara);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(37, 99, 235, 0.1);
+}
+
+
+.marimi__card--activ {
+  border-color: var(--culoare-primara);
+  background-color: var(--culoare-primara-deschisa);
+  box-shadow: 0 4px 20px rgba(37, 99, 235, 0.15);
+}
+
+
+.marimi__card--indisponibil {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+
+.marimi__badge {
+  position: absolute;
+  top: -0.75rem;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0.25rem 0.875rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border-radius: 2rem;
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+}
+
+
+.marimi__badge--popular {
+  background-color: var(--culoare-secundara);
+  color: #ffffff;
+}
+
+
+.marimi__badge--indisponibil {
+  background-color: var(--alerta-eroare);
+  color: #ffffff;
+}
+
+
+.marimi__litera {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--culoare-primara);
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+
+
+.marimi__eticheta {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--text-principal);
+  margin-bottom: 0.25rem;
+}
+
+
+.marimi__dimensiuni {
+  font-size: 0.875rem;
+  color: var(--text-tertiar);
+  margin-bottom: 1rem;
+}
+
+
+.marimi__pret {
+  display: flex;
+  align-items: baseline;
+  gap: 0.25rem;
+  margin-bottom: 1rem;
+}
+
+.marimi__pret-valoare {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--text-principal);
+}
+
+.marimi__pret-moneda {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--text-secundar);
+}
+
+
+.marimi__descriere {
+  font-size: 0.8125rem;
+  color: var(--text-secundar);
+  line-height: 1.6;
+  margin-bottom: 1.25rem;
+}
+
+
+.marimi__selector {
+  margin-top: auto;
+}
+
+.marimi__selector-icon {
+  width: 1.75rem;
+  height: 1.75rem;
+}
+
+
+.marimi__rezumat {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem 2rem;
+  background-color: var(--fundal-secundar);
+  border: 1px solid var(--border-principal);
+  border-radius: 0.75rem;
+  margin-bottom: 1.5rem;
+  gap: 1rem;
+}
+
+.marimi__rezumat-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.marimi__rezumat-eticheta {
+  font-size: 1rem;
+  color: var(--text-principal);
+}
+
+.marimi__rezumat-pret {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--culoare-primara);
+}
+
+
+.marimi__buton-cos {
+  padding: 0.875rem 2.5rem;
+  background-color: var(--culoare-primara);
+  color: #ffffff;
+  font-size: 1.0625rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 0.625rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.15s ease,
+              box-shadow 0.2s ease;
+  white-space: nowrap;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3);
+}
+
+.marimi__buton-cos:hover {
+  background-color: var(--culoare-primara-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+}
+
+.marimi__buton-cos:active {
+  transform: translateY(0);
+}
+
+
+.marimi__buton-cos:disabled {
+  background-color: var(--text-tertiar);
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+
+.marimi__nota {
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--text-tertiar);
+}
+
+
+@media (max-width: 1024px) {
+  .marimi__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+
+@media (max-width: 640px) {
+  .marimi__grid {
+    grid-template-columns: 1fr;
+    max-width: 360px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+
+  .marimi__rezumat {
+    flex-direction: column;
+    text-align: center;
+    padding: 1.25rem;
+  }
+
+  .marimi__rezumat-info {
+    align-items: center;
+  }
+
+  .marimi__buton-cos {
+    width: 100%;
+  }
+}
