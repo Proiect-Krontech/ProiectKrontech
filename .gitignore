@@ -14,5 +14,5 @@ Thumbs.db
 *.db
 *.sqlite
 
-test/cypress/videos
-test/cypress/screenshots
+frontend/test/cypress/videos
+frontend/test/cypress/screenshots
