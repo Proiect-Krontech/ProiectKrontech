@@ -13,3 +13,6 @@ npm-debug.log*
 Thumbs.db
 *.db
 *.sqlite
+
+cypress/videos
+cypress/screenshots
