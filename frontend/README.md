@@ -1,4 +1,4 @@
-# Proiect
+# Smart Pillow — Frontend
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.9.
 
@@ -36,24 +36,15 @@ ng build
 
 This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
 
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
 ## Running end-to-end tests
 
-For end-to-end (e2e) testing, run:
+End-to-end testing is done with [Cypress](https://www.cypress.io/).
 
 ```bash
-ng e2e
+npx cypress open    # interactive mode
+npx cypress run     # headless mode (CI)
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
+## Additional resources
 
 For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
