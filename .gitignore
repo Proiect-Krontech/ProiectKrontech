@@ -14,12 +14,5 @@ Thumbs.db
 *.db
 *.sqlite
 
-# Cypress
 frontend/test/cypress/videos
 frontend/test/cypress/screenshots
-
-# KiCad
-*-backups/
-_autosave*
-*.lck
-fp-info-cache
