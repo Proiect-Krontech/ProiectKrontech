@@ -1,4 +1,4 @@
-﻿# Smart Pillow — Firmware
+# Smart Pillow — Firmware
 
 Firmware for **Arduino Uno R4 WiFi** (Renesas RA4M1).  
 Reads 8 load cells grouped in pairs across 4 HX711 modules, 
@@ -9,12 +9,11 @@ analyzes posture and sends data via WiFi.
 ## Project Structure
 
 ```
-firmware/
+firmware-arduino/
 ├── src/
 │   ├── Config.hpp                  ← all constants (pins, thresholds, timings)
-│   ├── Secrets.hpp                 ← WiFi / API credentials template (do not commit real values)
 │   ├── StorageManager.hpp          ← local storage management
-│   ├── main.cpp                    ← setup() + loop()
+│   ├── main.cpp                  
 │   │
 │   ├── sensors/
 │   │   ├── ILoadCell.hpp           ← pure interface
@@ -37,10 +36,8 @@ firmware/
 │
 ├── test/
 │   └── test_native/
-│       ├── test_alert_manager.cpp
-│       ├── test_posture_analyzer.cpp
-│       ├── test_sensor_manager.cpp
-│       └── test_posture_data.cpp
+│       ├── mock_arduino.hpp
+│       └── test_posture.cpp
 │
 └── platformio.ini
 ```
@@ -80,14 +77,6 @@ pio run -e uno_r4_wifi --target upload
 ```bash
 pio device monitor --baud 115200
 ```
-
----
-
-## Credentials Setup
-
-In `src/Secrets.hpp`, replace the placeholder values with your local configuration.
-> **Warning:** Do not commit real credentials.
-
 ---
 
 ## Hardware Connections
