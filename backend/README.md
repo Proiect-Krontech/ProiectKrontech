@@ -1,4 +1,4 @@
-# 🛋️ Smart Pillow — Backend API
+# Smart Pillow — Backend API
 
 Backend REST API pentru proiectul **Smart Pillow**, o pernă inteligentă care monitorizează postura utilizatorului în timp real. Construit cu **Node.js + Express** și conectat la **MongoDB** prin Mongoose.
 
@@ -118,7 +118,7 @@ Index compus: `{ activationCode: 1, timestamp: -1 }` pentru interogări rapide p
 
 ## Endpoint-uri API
 
-### 🔑 Coduri de Activare — `/api/codes`
+### Coduri de Activare — `/api/codes`
 
 #### `POST /api/codes/generate`
 Generează un cod nou de activare pentru o pernă.
@@ -267,9 +267,9 @@ score = max(0, round(100 - (deviation / 150) * 100))
 
 | Scor | Postură |
 |---|---|
-| ≥ 70 | `correct` ✅ |
-| 40 – 69 | `attention` ⚠️ |
-| < 40 | `wrong` ❌ |
+| ≥ 70 | `correct` |
+| 40 – 69 | `attention` |
+| < 40 | `wrong` |
 
 ---
 
